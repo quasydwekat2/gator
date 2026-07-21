@@ -16,7 +16,6 @@ type RawConfig = {
   current_user_name?: string;
 };
 
-
 // Set current user and save config
 export function setUser(userName: string): void {
   const config = readConfig();
@@ -29,9 +28,6 @@ export function setUser(userName: string): void {
 function getConfigFilePath(): string {
   return path.join(os.homedir(), '.gatorconfig.json');
 }
-
-
-
 
 // Write Config object to JSON file
 function writeConfig(cfg: Config): void {
@@ -57,7 +53,6 @@ function validateConfig(rawConfig: any): Config {
 
   return {
     dbUrl: rawConfig.db_url,
-
     currentUserName:
       typeof rawConfig.current_user_name === 'string'
         ? rawConfig.current_user_name
@@ -75,4 +70,3 @@ export function readConfig(): Config {
 
   return validateConfig(parsedConfig);
 }
-

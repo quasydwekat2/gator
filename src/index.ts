@@ -3,13 +3,15 @@ import {
   registerCommand,
   runCommand,
   handlerLogin,
+  handlerRegister
 } from "./commands.js";
 
-function main(): void {
+async function main(): Promise<void> {
   const registry: CommandsRegistry = {};
 
   // Register available commands
   registerCommand(registry, "login", handlerLogin);
+  registerCommand(registry, "register", handlerRegister);
 
   // Parse command-line arguments
   const userArgs = process.argv.slice(2);
@@ -23,7 +25,7 @@ function main(): void {
   const cmdArgs = userArgs.slice(1);
 
   try {
-    runCommand(registry, cmdName, ...cmdArgs);
+    await runCommand(registry, cmdName, ...cmdArgs);
   } catch (error) {
     if (error instanceof Error) {
       console.error(`Error: ${error.message}`);
@@ -32,6 +34,9 @@ function main(): void {
     }
     process.exit(1);
   }
+
+  // Ensure the program exits properly after DB queries
+  process.exit(0);
 }
 
 main();
