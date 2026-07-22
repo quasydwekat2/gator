@@ -32,7 +32,8 @@ async function main(): Promise<void> {
     } else {
       console.error("An unknown error occurred.");
     }
-    process.exit(1);
+    // Exiting with code 1 here is what makes the boot.dev negative tests pass
+    process.exit(1); 
   }
 
   // Ensure the program exits properly after DB queries

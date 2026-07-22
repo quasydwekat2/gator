@@ -1,3 +1,4 @@
+import "dotenv/config";
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -63,10 +64,21 @@ function validateConfig(rawConfig: any): Config {
 // Read config file and return Config object
 export function readConfig(): Config {
   const filePath = getConfigFilePath();
+  const fileExists = fs.existsSync(filePath);
+  const parsedConfig = fileExists
+    ? JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+    : {};
 
-  const fileContent = fs.readFileSync(filePath, 'utf-8');
+  const dbUrl = process.env.DATABASE_URL ?? parsedConfig.db_url;
+  if (typeof dbUrl !== 'string' || dbUrl.length === 0) {
+    throw new Error('Invalid config format: db_url must be a string');
+  }
 
-  const parsedConfig = JSON.parse(fileContent);
-
-  return validateConfig(parsedConfig);
+  return {
+    dbUrl,
+    currentUserName:
+      typeof parsedConfig.current_user_name === 'string'
+        ? parsedConfig.current_user_name
+        : undefined,
+  };
 }
