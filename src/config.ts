@@ -1,7 +1,7 @@
 import "dotenv/config";
-import fs from 'fs';
-import os from 'os';
-import path from 'path';
+import fs from "fs";
+import os from "os";
+import path from "path";
 
 // TypeScript representation
 // Uses camelCase
@@ -27,7 +27,7 @@ export function setUser(userName: string): void {
 }
 
 function getConfigFilePath(): string {
-  return path.join(os.homedir(), '.gatorconfig.json');
+  return path.join(os.homedir(), ".gatorconfig.json");
 }
 
 // Write Config object to JSON file
@@ -39,23 +39,23 @@ function writeConfig(cfg: Config): void {
     current_user_name: cfg.currentUserName,
   };
 
-  fs.writeFileSync(filePath, JSON.stringify(rawConfig, null, 2), 'utf-8');
+  fs.writeFileSync(filePath, JSON.stringify(rawConfig, null, 2), "utf-8");
 }
 
 // Validate JSON data and convert it to Config
 function validateConfig(rawConfig: any): Config {
-  if (typeof rawConfig !== 'object' || rawConfig === null) {
-    throw new Error('Invalid config format: expected an object');
+  if (typeof rawConfig !== "object" || rawConfig === null) {
+    throw new Error("Invalid config format: expected an object");
   }
 
-  if (typeof rawConfig.db_url !== 'string') {
-    throw new Error('Invalid config format: db_url must be a string');
+  if (typeof rawConfig.db_url !== "string") {
+    throw new Error("Invalid config format: db_url must be a string");
   }
 
   return {
     dbUrl: rawConfig.db_url,
     currentUserName:
-      typeof rawConfig.current_user_name === 'string'
+      typeof rawConfig.current_user_name === "string"
         ? rawConfig.current_user_name
         : undefined,
   };
@@ -66,18 +66,18 @@ export function readConfig(): Config {
   const filePath = getConfigFilePath();
   const fileExists = fs.existsSync(filePath);
   const parsedConfig = fileExists
-    ? JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+    ? JSON.parse(fs.readFileSync(filePath, "utf-8"))
     : {};
 
   const dbUrl = process.env.DATABASE_URL ?? parsedConfig.db_url;
-  if (typeof dbUrl !== 'string' || dbUrl.length === 0) {
-    throw new Error('Invalid config format: db_url must be a string');
+  if (typeof dbUrl !== "string" || dbUrl.length === 0) {
+    throw new Error("Invalid config format: db_url must be a string");
   }
 
   return {
     dbUrl,
     currentUserName:
-      typeof parsedConfig.current_user_name === 'string'
+      typeof parsedConfig.current_user_name === "string"
         ? parsedConfig.current_user_name
         : undefined,
   };
